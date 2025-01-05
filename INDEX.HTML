@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    video {
+      width: 80%;
+      max-width: 800px;
+      margin-top: 20px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+    input, button {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Video Player</h1>
+  <input type="text" id="video-url" placeholder="Enter .m3u8 URL" size="50" />
+  <br />
+  <button id="play-button">Play</button>
+  <br />
+  <video id="video-player" controls></video>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    document.getElementById('play-button').addEventListener('click', () => {
+      const videoUrl = document.getElementById('video-url').value;
+      const video = document.getElementById('video-player');
+
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play();
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoUrl;
+        video.play();
+      } else {
+        alert('Your browser does not support HLS playback.');
+      }
+    });
+  </script>
+</body>
+</html>
